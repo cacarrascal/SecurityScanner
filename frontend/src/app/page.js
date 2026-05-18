@@ -5,7 +5,10 @@ import { useDropzone } from 'react-dropzone'
 import { Upload, FileArchive, AlertCircle, Shield, Zap, Eye, FileSearch } from 'lucide-react'
 import ProgressBar from '../components/ProgressBar'
 import Console from '../components/Console'
+import Link from 'next/link'
 import { streamScan, saveResult } from '../lib/api'
+
+const MAX_UPLOAD_BYTES = 4 * 1024 * 1024 // 4 MB — límite Vercel Hobby
 
 const features = [
   { Icon: Shield, title: 'Multi-scanner', desc: 'Pattern matching + Bandit + deps + complexity.' },
@@ -26,6 +29,17 @@ export default function HomePage() {
   const onDrop = useCallback(async (files) => {
     if (!files.length) return
     setError(null)
+
+    const file = files[0]
+    if (file.size > MAX_UPLOAD_BYTES) {
+      const mb = (file.size / (1024 * 1024)).toFixed(1)
+      setError(
+        `El archivo pesa ${mb} MB y el límite es 4 MB (Vercel free). ` +
+        `Para proyectos más grandes, usá la opción Git con la URL del repo.`
+      )
+      return
+    }
+
     setMessages([])
     setProgress(0)
     setStep('')
@@ -33,7 +47,7 @@ export default function HomePage() {
     setScanning(true)
 
     const form = new FormData()
-    form.append('file', files[0])
+    form.append('file', file)
 
     try {
       const result = await streamScan('/scans/upload', form, {
@@ -82,7 +96,7 @@ export default function HomePage() {
                 <div className="text-lg font-medium text-white">
                   {isDragActive ? 'Soltá el archivo' : 'Arrastrá ZIP, TAR o archivo de código'}
                 </div>
-                <div className="text-sm text-carlos-muted mt-1">o hacé click — máx ~50MB</div>
+                <div className="text-sm text-carlos-muted mt-1">o hacé click — máx 4 MB (Vercel free)</div>
               </div>
               <div className="flex gap-2 flex-wrap justify-center mt-2">
                 {['ZIP', 'TAR', 'PY', 'JS', 'TS', 'JAVA', 'PHP', 'GO'].map(ext => (
@@ -101,6 +115,12 @@ export default function HomePage() {
               </div>
             </div>
           )}
+
+          <div className="card p-4 border-carlos-accent/30 bg-carlos-accent/5 text-sm text-carlos-text">
+            <span className="text-carlos-accent font-medium">¿Proyecto más grande?</span>{' '}
+            Usá <Link href="/git" className="underline text-carlos-accent">Git URL</Link> —
+            descargamos el repo desde GitHub server-side sin el límite de 4 MB.
+          </div>
         </div>
       )}
 

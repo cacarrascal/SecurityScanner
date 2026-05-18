@@ -7,8 +7,9 @@ VERSION = "2.0.0"
 HOST = "0.0.0.0"
 PORT = 8000
 
-# Límite de subida — Vercel acepta hasta ~4.5 MB por body en Hobby
-MAX_UPLOAD_SIZE = 50 * 1024 * 1024  # 50 MB (local); en Vercel quedará limitado por la plataforma
+# Vercel Hobby corta requests > 4.5 MB con 413 FUNCTION_PAYLOAD_TOO_LARGE.
+# Dejamos un colchón para el overhead multipart.
+MAX_UPLOAD_SIZE = 4 * 1024 * 1024  # 4 MB
 SCAN_TIMEOUT = 50  # segundos por scanner externo (Vercel maxDuration es 60s)
 
 # SSRF protection: bloquea IPs privadas/locales
