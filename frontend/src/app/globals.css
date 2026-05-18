@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  background: #0d1117;
+  color: #c9d1d9;
+}
+
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: #0d1117; }
+*::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+*::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+@layer components {
+  .card { @apply bg-carlos-surface border border-carlos-border rounded-lg; }
+  .btn { @apply px-4 py-2 rounded-md font-medium transition-colors text-sm; }
+  .btn-primary { @apply btn bg-carlos-accent text-white hover:bg-blue-500; }
+  .btn-secondary { @apply btn bg-carlos-surface border border-carlos-border text-carlos-text hover:border-carlos-accent; }
+  .badge { @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide; }
+  .badge-critical { @apply badge bg-carlos-danger/20 text-carlos-danger border border-carlos-danger/40; }
+  .badge-high { @apply badge bg-carlos-critical/20 text-carlos-critical border border-carlos-critical/40; }
+  .badge-medium { @apply badge bg-carlos-warning/20 text-carlos-warning border border-carlos-warning/40; }
+  .badge-low { @apply badge bg-carlos-accent/20 text-carlos-accent border border-carlos-accent/40; }
+  .badge-info { @apply badge bg-carlos-muted/20 text-carlos-muted border border-carlos-muted/40; }
+}
